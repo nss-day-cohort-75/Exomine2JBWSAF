@@ -348,8 +348,32 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapGet("/colonyMinerals", ()=>
+{
+    return colonyMinerals.Select(cm => new ColonyMineralDTO
+    {
+        Id = cm.Id,
+        ColonyId = cm.ColonyId,
+        MineralId = cm.MineralId,
+        Quantity = cm.Quantity
+    });
+});
 
-
+app.MapGet("/colonyMinerals/{id}", (int id)=>
+{
+    ColonyMineral colonyMineral = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
+    if ( colonyMineral == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok( new ColonyMineralDTO
+    {
+        Id = colonyMineral.Id,
+        ColonyId = colonyMineral.ColonyId,
+        MineralId = colonyMineral.MineralId,
+        Quantity = colonyMineral.Quantity
+    });
+});
 app.Run();
 
 
