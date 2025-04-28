@@ -315,7 +315,7 @@ List<Facility> facilities = new List<Facility>
     {
         Id = 3,
         Name = "Titan Deep Drills",
-        IsActive =true 
+        IsActive =true
     },
     new Facility
     {
@@ -348,7 +348,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/colonyMinerals", ()=>
+//START ALL ENDPOINTS
+
+app.MapGet("/colonyMinerals", () =>
 {
     return colonyMinerals.Select(cm => new ColonyMineralDTO
     {
@@ -359,14 +361,14 @@ app.MapGet("/colonyMinerals", ()=>
     });
 });
 
-app.MapGet("/colonyMinerals/{id}", (int id)=>
+app.MapGet("/colonyMinerals/{id}", (int id) =>
 {
     ColonyMineral colonyMineral = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
-    if ( colonyMineral == null)
+    if (colonyMineral == null)
     {
         return Results.NotFound();
     }
-    return Results.Ok( new ColonyMineralDTO
+    return Results.Ok(new ColonyMineralDTO
     {
         Id = colonyMineral.Id,
         ColonyId = colonyMineral.ColonyId,
@@ -374,6 +376,30 @@ app.MapGet("/colonyMinerals/{id}", (int id)=>
         Quantity = colonyMineral.Quantity
     });
 });
+// Get all governors
+app.MapGet("/governors", () =>
+{
+    var governorDTOs = governors.Select(governor => new GovernorDTO
+    {
+        Id = governor.Id,
+        Name = governor.Name,
+        IsActive = governor.IsActive,
+        ColonyId = governor.ColonyId
+    });
+
+    return Results.Ok(governorDTOs);
+});
+
+// Get all colonies
+app.MapGet("/colonies", () =>
+{
+    var colonyDTOs = colonies.Select(colony => new ColonyDTO
+    {
+        Id = colony.Id,
+        Name = colony.Name
+    });
+
+    return Results.Ok(colonyDTOs);
+});
+
 app.Run();
-
-
