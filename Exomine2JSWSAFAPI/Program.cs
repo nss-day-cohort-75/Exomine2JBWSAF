@@ -1,3 +1,335 @@
+using Exomine2JSWSAFAPI.Models;
+using Exomine2JSWSAFAPI.Models.DTOs;
+
+List<Governor> governors = new List<Governor>
+{
+    new Governor
+    {
+        Id = 1,
+        Name = "Glorb Harrington",
+        IsActive = true,
+        ColonyId = 1
+    },
+    new Governor
+    {
+        Id = 2,
+        Name = "Margaret Thompson",
+        IsActive = true,
+        ColonyId = 2
+    },
+    new Governor
+    {
+        Id = 3,
+        Name = "Zilliam Starr",
+        IsActive = true,
+        ColonyId = 3
+    },
+    new Governor
+    {
+        Id = 4,
+        Name = "Lazer Razor",
+        IsActive = false,
+        ColonyId = 4
+    },
+    new Governor
+    {
+        Id = 5,
+        Name = "Nova Thorne",
+        IsActive = true,
+        ColonyId = 5
+    },
+    new Governor
+    {
+        Id = 6,
+        Name = "Ham Sammich",
+        IsActive = true,
+        ColonyId = 3
+    },
+    new Governor
+    {
+        Id = 7,
+        Name = "Xena Warrior-Princess",
+        IsActive = true,
+        ColonyId = 4
+    },
+    new Governor
+    {
+        Id = 8,
+        Name = "Krater Rubble",
+        IsActive = true,
+        ColonyId = 5
+    }
+};
+List<Colony> colonies = new List<Colony>
+{
+    new Colony
+    {
+        Id = 1,
+        Name = "Nova Prime"
+    },
+    new Colony
+    {
+        Id = 2,
+        Name = "Kepler Outpost"
+    },
+    new Colony
+    {
+        Id = 3,
+        Name = "Titan Haven"
+    },
+    new Colony
+    {
+        Id = 4,
+        Name = "Andromeda Station"
+    },
+    new Colony
+    {
+        Id = 5,
+        Name = "Orion's Reach"
+    }
+};
+List<ColonyMineral> colonyMinerals = new List<ColonyMineral>
+{
+    new ColonyMineral
+    {
+        Id = 1,
+        ColonyId = 1,
+        MineralId = 1,
+        Quantity = 503
+    },
+    new ColonyMineral
+    {
+        Id = 2,
+        ColonyId = 2,
+        MineralId = 2,
+        Quantity = 753
+    },
+    new ColonyMineral
+    {
+        Id = 3,
+        ColonyId = 3,
+        MineralId = 3,
+        Quantity = 1201
+    },
+    new ColonyMineral
+    {
+        Id = 4,
+        ColonyId = 4,
+        MineralId = 4,
+        Quantity = 450
+    },
+    new ColonyMineral
+    {
+        Id = 5,
+        ColonyId = 5,
+        MineralId = 5,
+        Quantity = 906
+    },
+    new ColonyMineral
+    {
+        Id = 6,
+        ColonyId = 2,
+        MineralId = 4,
+        Quantity = 750
+    },
+    new ColonyMineral
+    {
+        Id = 7,
+        ColonyId = 3,
+        MineralId = 2,
+        Quantity = 1201
+    },
+    new ColonyMineral
+    {
+        Id = 8,
+        ColonyId = 4,
+        MineralId = 3,
+        Quantity = 451
+    },
+    new ColonyMineral
+    {
+        Id = 9,
+        ColonyId = 1,
+        MineralId = 5,
+        Quantity = 4
+    },
+    new ColonyMineral
+    {
+        Id = 10,
+        ColonyId = 2,
+        MineralId = 3,
+        Quantity = 7
+    },
+    new ColonyMineral
+    {
+        Id = 11,
+        ColonyId = 2,
+        MineralId = 1,
+        Quantity = 1
+    },
+    new ColonyMineral
+    {
+        Id = 12,
+        ColonyId = 2,
+        MineralId = 5,
+        Quantity = 1
+    },
+    new ColonyMineral
+    {
+        Id = 13,
+        ColonyId = 4,
+        MineralId = 5,
+        Quantity = 1
+    },
+    new ColonyMineral
+    {
+        Id = 14,
+        ColonyId = 3,
+        MineralId = 5,
+        Quantity = 2
+    },
+    new ColonyMineral
+    {
+        Id = 15,
+        ColonyId = 5,
+        MineralId = 3,
+        Quantity = 2
+    }
+};
+List<Mineral> minerals = new List<Mineral>
+{
+    new Mineral
+    {
+        Id = 1,
+        Name = "Xenorite"
+    },
+    new Mineral
+    {
+        Id = 2,
+        Name = "Voidium"
+    },
+    new Mineral
+    {
+        Id = 3,
+        Name = "Nebulite"
+    },
+    new Mineral
+    {
+        Id = 4,
+        Name = "Quantium Shardium"
+    },
+    new Mineral
+    {
+        Id = 5,
+        Name = "Darkstar Ore"
+    }
+};
+List<FacilityMineral> facilityMinerals = new List<FacilityMineral>
+{
+    new FacilityMineral
+    {
+        Id = 1,
+        FacilityId = 1,
+        MineralId = 1,
+        Quantity = 98
+    },
+    new FacilityMineral
+    {
+        Id = 2,
+        FacilityId = 2,
+        MineralId = 2,
+        Quantity = 107
+    },
+    new FacilityMineral
+    {
+        Id = 3,
+        FacilityId = 3,
+        MineralId = 3,
+        Quantity = 148
+    },
+    new FacilityMineral
+    {
+        Id = 4,
+        FacilityId = 4,
+        MineralId = 4,
+        Quantity = 62
+    },
+    new FacilityMineral
+    {
+        Id = 5,
+        FacilityId = 5,
+        MineralId = 5,
+        Quantity = 593
+    },
+    new FacilityMineral
+    {
+        Id = 6,
+        FacilityId = 4,
+        MineralId = 1,
+        Quantity = 99
+    },
+    new FacilityMineral
+    {
+        Id = 7,
+        FacilityId = 3,
+        MineralId = 2,
+        Quantity = 102
+    },
+    new FacilityMineral
+    {
+        Id = 8,
+        FacilityId = 5,
+        MineralId = 3,
+        Quantity = 159
+    },
+    new FacilityMineral
+    {
+        Id = 9,
+        FacilityId = 2,
+        MineralId = 4,
+        Quantity = 62
+    },
+    new FacilityMineral
+    {
+        Id = 10,
+        FacilityId = 1,
+        MineralId = 5,
+        Quantity = 591
+    },
+};
+List<Facility> facilities = new List<Facility>
+{
+    new Facility
+    {
+        Id = 1,
+        Name = "Celestial Excavation Hub",
+        IsActive = true
+    },
+    new Facility
+    {
+        Id = 2,
+        Name = "Nebula Core Refinery",
+        IsActive = false
+    },
+    new Facility
+    {
+        Id = 3,
+        Name = "Titan Deep Drills",
+        IsActive =true 
+    },
+    new Facility
+    {
+        Id = 4,
+        Name = "Eclipse Ore Extractors",
+        IsActive = false
+    },
+    new Facility
+    {
+        Id = 5,
+        Name = "Quantum Harvest Station",
+        IsActive = true
+    }
+};
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,29 +348,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
