@@ -443,8 +443,10 @@ app.MapGet("/facilityMinerals", () =>
     {
         Id = facilityMineral.Id,
         Quantity = facilityMineral.Quantity,
-        Facility = facilities.FirstOrDefault(f => f.Id == facilityMineral.FacilityId)?.Name,
-        Mineral = minerals.FirstOrDefault(m => m.Id == facilityMineral.MineralId)?.Name
+        MineralId = facilityMineral.MineralId,
+        FacilityId = facilityMineral.FacilityId,
+        Facility = facilities.FirstOrDefault(f => f.Id == facilityMineral.FacilityId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == facilityMineral.MineralId)
     });
 
     return Results.Ok(facilityMineralDTOs);
