@@ -401,7 +401,7 @@ app.MapGet("/colonies", () =>
 
     return Results.Ok(colonyDTOs);
 });
-app.MapGet("/facilities", ()=>
+app.MapGet("/facilities", () =>
 {
     return facilities.Select(f => new FacilityDTO
     {
@@ -411,18 +411,46 @@ app.MapGet("/facilities", ()=>
     });
 });
 
-app.MapGet("/facilities/{id}",(int id)=>
+app.MapGet("/facilities/{id}", (int id) =>
 {
     Facility facility = facilities.FirstOrDefault(f => f.Id == id);
     if (facility == null)
     {
         return Results.NotFound();
     }
-    return Results.Ok( new FacilityDTO
+    return Results.Ok(new FacilityDTO
     {
         Id = facility.Id,
         Name = facility.Name,
         IsActive = facility.IsActive
     });
 });
+// get all minerals
+app.MapGet("/minerals", () =>
+{
+    var mineralDTOs = minerals.Select(mineral => new MineralDTO
+    {
+        Id = mineral.Id,
+        Name = mineral.Name
+    });
+
+    return Results.Ok(mineralDTOs);
+});
+// Get all facility minerals with expanded mineral and facility data
+app.MapGet("/facilityMinerals", () =>
+{
+    var facilityMineralDTOs = facilityMinerals.Select(facilityMineral => new FacilityMineralDTO
+    {
+        Id = facilityMineral.Id,
+        Quantity = facilityMineral.Quantity,
+        Facility = facilities.FirstOrDefault(f => f.Id == facilityMineral.FacilityId)?.Name,
+        Mineral = minerals.FirstOrDefault(m => m.Id == facilityMineral.MineralId)?.Name
+    });
+
+    return Results.Ok(facilityMineralDTOs);
+});
+
+
+
+
 app.Run();
