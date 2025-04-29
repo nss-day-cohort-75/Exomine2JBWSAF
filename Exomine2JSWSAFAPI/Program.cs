@@ -525,13 +525,33 @@ app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
         Id = colonyMineral.Id,
         ColonyId = colonyMineral.ColonyId,
         MineralId = colonyMineral.MineralId,
-        Quantity = colonyMineral.Quantity
+        Quantity = colonyMineral.Quantity,
+        Colony = colonies.FirstOrDefault(c => c.Id == colonyMineral.ColonyId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == colonyMineral.MineralId)
     });
 });
 
 app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
 {
     ColonyMineral colonyMineralToUpdate = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
+    if (colonyMineralToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    if (id != colonyMineral.Id)
+    {
+        return Results.BadRequest();
+    }
+    colonyMineralToUpdate.Quantity = colonyMineral.Quantity;
+    return Results.Ok( new ColonyMineralDTO
+    {
+        Id = colonyMineralToUpdate.Id,
+        ColonyId = colonyMineralToUpdate.ColonyId,
+        MineralId = colonyMineralToUpdate.MineralId,
+        Quantity = colonyMineralToUpdate.Quantity,
+        Colony = colonies.FirstOrDefault(c => c.Id == colonyMineral.ColonyId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == colonyMineral.MineralId)
+    });
 });
 
 app.Run();
