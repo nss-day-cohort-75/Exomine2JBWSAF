@@ -401,5 +401,28 @@ app.MapGet("/colonies", () =>
 
     return Results.Ok(colonyDTOs);
 });
+app.MapGet("/facilities", ()=>
+{
+    return facilities.Select(f => new FacilityDTO
+    {
+        Id = f.Id,
+        Name = f.Name,
+        IsActive = f.IsActive
+    });
+});
 
+app.MapGet("/facilities/{id}",(int id)=>
+{
+    Facility facility = facilities.FirstOrDefault(f => f.Id == id);
+    if (facility == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok( new FacilityDTO
+    {
+        Id = facility.Id,
+        Name = facility.Name,
+        IsActive = facility.IsActive
+    });
+});
 app.Run();
