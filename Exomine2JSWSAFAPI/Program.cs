@@ -357,7 +357,9 @@ app.MapGet("/colonyMinerals", () =>
         Id = cm.Id,
         ColonyId = cm.ColonyId,
         MineralId = cm.MineralId,
-        Quantity = cm.Quantity
+        Quantity = cm.Quantity,
+        Colony = colonies.FirstOrDefault(c => c.Id == cm.ColonyId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == cm.MineralId)
     });
 });
 
@@ -373,7 +375,9 @@ app.MapGet("/colonyMinerals/{id}", (int id) =>
         Id = colonyMineral.Id,
         ColonyId = colonyMineral.ColonyId,
         MineralId = colonyMineral.MineralId,
-        Quantity = colonyMineral.Quantity
+        Quantity = colonyMineral.Quantity,
+        Colony = colonies.FirstOrDefault(c => c.Id == colonyMineral.ColonyId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == colonyMineral.MineralId)
     });
 });
 // Get all governors
@@ -452,7 +456,32 @@ app.MapGet("/facilityMinerals", () =>
     return Results.Ok(facilityMineralDTOs);
 });
 
+app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
+{
+     var existing = colonyMinerals.FirstOrDefault(cm =>
+        cm.ColonyId == colonyMineral.ColonyId &&
+        cm.MineralId == colonyMineral.MineralId);
 
+    if (existing != null)
+    {
+        
+        return Results.Conflict($"ColonyMineral with ColonyId {colonyMineral.ColonyId} and MineralId {colonyMineral.MineralId} already exists.");
+    }
+    colonyMineral.Id = colonyMinerals.Max( cm => cm.Id) + 1;
+    colonyMinerals.Add(colonyMineral);
 
+    return Results.Created($"/colonyMinerals/{colonyMineral.Id}", new ColonyMineralDTO
+    {
+        Id = colonyMineral.Id,
+        ColonyId = colonyMineral.ColonyId,
+        MineralId = colonyMineral.MineralId,
+        Quantity = colonyMineral.Quantity
+    });
+});
+
+app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
+{
+    ColonyMineral colonyMineralToUpdate = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
+});
 
 app.Run();
