@@ -455,6 +455,56 @@ app.MapGet("/facilityMinerals", () =>
 
     return Results.Ok(facilityMineralDTOs);
 });
+// get single facility mineral by ID with expanded mineral
+
+app.MapGet("/facilityMinerals/{id}", (int id) =>
+{
+    FacilityMineral facilityMineral = facilityMinerals.FirstOrDefault(fm => fm.Id == id);
+    if (facilityMineral == null)
+    {
+        return Results.NotFound();
+    }
+    FacilityMineralDTO facilityMineralData = new FacilityMineralDTO
+    {
+        Id = facilityMineral.Id,
+        Quantity = facilityMineral.Quantity,
+        FacilityId = facilityMineral.FacilityId,
+        MineralId = facilityMineral.MineralId,
+        Facility = facilities.FirstOrDefault(f => f.Id == facilityMineral.FacilityId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == facilityMineral.MineralId)
+    };
+    return Results.Ok(facilityMineralData);
+});
+
+// updating facility mineral (decreasing after purchase)
+app.MapPut("/facilityMinerals/{id}", (int id, int amountPurchased) =>
+{
+    FacilityMineral facilityMineral = facilityMinerals.FirstOrDefault(fm => fm.Id == id);
+    if (facilityMineral == null)
+    {
+        return Results.NotFound();
+    }
+    if (amountPurchased > facilityMineral.Quantity) // checks amount trying to purchase greater than total amount
+    {
+        return Results.BadRequest();
+    }
+    facilityMineral.Quantity = facilityMineral.Quantity - amountPurchased;
+
+    FacilityMineralDTO updatedDTO = new FacilityMineralDTO
+    {
+        Id = facilityMineral.Id,
+        Quantity = facilityMineral.Quantity,
+        FacilityId = facilityMineral.FacilityId,
+        MineralId = facilityMineral.MineralId,
+        Facility = facilities.FirstOrDefault(f => f.Id == facilityMineral.FacilityId),
+        Mineral = minerals.FirstOrDefault(m => m.Id == facilityMineral.MineralId)
+    };
+    return Results.Ok(updatedDTO);
+
+
+
+});
+
 
 app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
 {
