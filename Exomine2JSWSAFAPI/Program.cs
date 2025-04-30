@@ -231,70 +231,81 @@ List<FacilityMineral> facilityMinerals = new List<FacilityMineral>
         Id = 1,
         FacilityId = 1,
         MineralId = 1,
-        Quantity = 98
+        Quantity = 98,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 2,
         FacilityId = 2,
         MineralId = 2,
-        Quantity = 107
+        Quantity = 107,
+        ProductionRate = 3
+
     },
     new FacilityMineral
     {
         Id = 3,
         FacilityId = 3,
         MineralId = 3,
-        Quantity = 148
+        Quantity = 148,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 4,
         FacilityId = 4,
         MineralId = 4,
-        Quantity = 62
+        Quantity = 62,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 5,
         FacilityId = 5,
         MineralId = 5,
-        Quantity = 593
+        Quantity = 593,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 6,
         FacilityId = 4,
         MineralId = 1,
-        Quantity = 99
+        Quantity = 99,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 7,
         FacilityId = 3,
         MineralId = 2,
-        Quantity = 102
+        Quantity = 102,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 8,
         FacilityId = 5,
         MineralId = 3,
-        Quantity = 159
+        Quantity = 159,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 9,
         FacilityId = 2,
         MineralId = 4,
-        Quantity = 62
+        Quantity = 62,
+        ProductionRate = 3
     },
     new FacilityMineral
     {
         Id = 10,
         FacilityId = 1,
         MineralId = 5,
-        Quantity = 591
+        Quantity = 591,
+        ProductionRate = 3
     },
 };
 List<Facility> facilities = new List<Facility>
@@ -560,6 +571,30 @@ app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
         Colony = colonies.FirstOrDefault(c => c.Id == colonyMineral.ColonyId),
         Mineral = minerals.FirstOrDefault(m => m.Id == colonyMineral.MineralId)
     });
+});
+
+
+// Simulate Production
+app.MapPost("/simulateProduction", () => {
+    var updatedItems = new List<FacilityMineralDTO>();
+
+    foreach (var fm in facilityMinerals)
+    {
+        fm.Quantity += fm.ProductionRate;
+
+        updatedItems.Add(new FacilityMineralDTO
+        {
+            Id = fm.Id,
+            FacilityId = fm.FacilityId,
+            MineralId = fm.MineralId,
+            Quantity = fm.Quantity,
+            ProductionRate = fm.ProductionRate,
+            Facility = facilities.FirstOrDefault(f => f.Id == fm.FacilityId),
+            Mineral = minerals.FirstOrDefault(m => m.Id == fm.MineralId)
+        });
+    }
+
+    return Results.Ok(updatedItems);
 });
 
 app.Run();

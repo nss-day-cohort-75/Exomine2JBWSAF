@@ -6,4 +6,6 @@ public class FacilityMineral
     public int FacilityId {get; set;}
     public int MineralId {get; set;}
     public int Quantity {get; set;}
+
+    public int ProductionRate { get; set; }
 }
