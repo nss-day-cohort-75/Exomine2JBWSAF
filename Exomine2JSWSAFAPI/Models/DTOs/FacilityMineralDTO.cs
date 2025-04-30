@@ -6,6 +6,7 @@ public class FacilityMineralDTO
     public int Quantity { get; set; }
     public int FacilityId { get; set; }
     public int MineralId { get; set; }
+    public int ProductionRate { get; set; }
     public Facility Facility { get; set; }
     public Mineral Mineral { get; set; }
 
