@@ -452,7 +452,8 @@ app.MapGet("/facilities", () =>
     {
         Id = f.Id,
         Name = f.Name,
-        IsActive = f.IsActive
+        IsActive = f.IsActive,
+        Balance = f.Balance
     });
 });
 
