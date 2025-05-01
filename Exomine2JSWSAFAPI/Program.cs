@@ -65,27 +65,32 @@ List<Colony> colonies = new List<Colony>
     new Colony
     {
         Id = 1,
-        Name = "Nova Prime"
+        Name = "Nova Prime",
+        Balance = 141.62M
     },
     new Colony
     {
         Id = 2,
-        Name = "Kepler Outpost"
+        Name = "Kepler Outpost",
+        Balance = 99.99M
     },
     new Colony
     {
         Id = 3,
-        Name = "Titan Haven"
+        Name = "Titan Haven",
+        Balance = 123.23M
     },
     new Colony
     {
         Id = 4,
-        Name = "Andromeda Station"
+        Name = "Andromeda Station",
+        Balance = 209.73M
     },
     new Colony
     {
         Id = 5,
-        Name = "Orion's Reach"
+        Name = "Orion's Reach",
+        Balance = 470.87M
     }
 };
 List<ColonyMineral> colonyMinerals = new List<ColonyMineral>
@@ -314,31 +319,36 @@ List<Facility> facilities = new List<Facility>
     {
         Id = 1,
         Name = "Celestial Excavation Hub",
-        IsActive = true
+        IsActive = true,
+        Balance = 202.02M
     },
     new Facility
     {
         Id = 2,
         Name = "Nebula Core Refinery",
-        IsActive = false
+        IsActive = false,
+        Balance = 333.33M
     },
     new Facility
     {
         Id = 3,
         Name = "Titan Deep Drills",
-        IsActive =true
+        IsActive =true,
+        Balance = 455.55M
     },
     new Facility
     {
         Id = 4,
         Name = "Eclipse Ore Extractors",
-        IsActive = false
+        IsActive = false,
+        Balance = 620.41M
     },
     new Facility
     {
         Id = 5,
         Name = "Quantum Harvest Station",
-        IsActive = true
+        IsActive = true,
+        Balance = 999.99M
     }
 };
 var builder = WebApplication.CreateBuilder(args);
@@ -595,6 +605,43 @@ app.MapPost("/simulateProduction", () => {
     }
 
     return Results.Ok(updatedItems);
+});
+
+app.MapPut("/colonies/{id}/balance",(int id, decimal Deduction)=>
+{
+    Colony colony = colonies.FirstOrDefault(c => c.Id == id);
+    if (colony == null)
+    {
+        return Results.NotFound();
+    }
+     var updatedBalance = colony.Balance - Deduction;
+    if (colony.Balance < Deduction)
+    {
+        return Results.BadRequest("Insufficient Balance");
+    }
+    return Results.Ok(new ColonyDTO
+    {
+       Id = colony.Id,
+       Name = colony.Name,
+       Balance = updatedBalance 
+    });
+});
+
+app.MapPut("/facilities/{id}/balance", (int id, decimal Addition)=>
+{
+    Facility facility = facilities.FirstOrDefault(f => f.Id == id);
+    if (facility == null)
+    {
+        return Results.NotFound();
+    }
+    var updatedBalance = facility.Balance + Addition;
+    return Results.Ok(new FacilityDTO
+    {
+        Id = facility.Id,
+        Name = facility.Name,
+        IsActive = facility.IsActive,
+        Balance = updatedBalance
+    });
 });
 
 app.Run();
