@@ -206,27 +206,32 @@ List<Mineral> minerals = new List<Mineral>
     new Mineral
     {
         Id = 1,
-        Name = "Xenorite"
+        Name = "Xenorite",
+        Price = 99.99M
     },
     new Mineral
     {
         Id = 2,
-        Name = "Voidium"
+        Name = "Voidium",
+        Price = 88.88M
     },
     new Mineral
     {
         Id = 3,
-        Name = "Nebulite"
+        Name = "Nebulite",
+        Price = 77.77M
     },
     new Mineral
     {
         Id = 4,
-        Name = "Quantium Shardium"
+        Name = "Quantium Shardium",
+        Price = 55.55M
     },
     new Mineral
     {
         Id = 5,
-        Name = "Darkstar Ore"
+        Name = "Darkstar Ore",
+        Price = 44.44M
     }
 };
 List<FacilityMineral> facilityMinerals = new List<FacilityMineral>
@@ -535,18 +540,18 @@ app.MapPut("/facilityMinerals/{id}", (int id, int amountPurchased) =>
 });
 
 
-app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
+app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral) =>
 {
-     var existing = colonyMinerals.FirstOrDefault(cm =>
-        cm.ColonyId == colonyMineral.ColonyId &&
-        cm.MineralId == colonyMineral.MineralId);
+    var existing = colonyMinerals.FirstOrDefault(cm =>
+       cm.ColonyId == colonyMineral.ColonyId &&
+       cm.MineralId == colonyMineral.MineralId);
 
     if (existing != null)
     {
-        
+
         return Results.Conflict($"ColonyMineral with ColonyId {colonyMineral.ColonyId} and MineralId {colonyMineral.MineralId} already exists.");
     }
-    colonyMineral.Id = colonyMinerals.Max( cm => cm.Id) + 1;
+    colonyMineral.Id = colonyMinerals.Max(cm => cm.Id) + 1;
     colonyMinerals.Add(colonyMineral);
 
     return Results.Created($"/colonyMinerals/{colonyMineral.Id}", new ColonyMineralDTO
@@ -560,7 +565,7 @@ app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
     });
 });
 
-app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
+app.MapPut("/colonyMinerals/{id}", (int id, ColonyMineral colonyMineral) =>
 {
     ColonyMineral colonyMineralToUpdate = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
     if (colonyMineralToUpdate == null)
@@ -572,7 +577,7 @@ app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
         return Results.BadRequest();
     }
     colonyMineralToUpdate.Quantity = colonyMineral.Quantity;
-    return Results.Ok( new ColonyMineralDTO
+    return Results.Ok(new ColonyMineralDTO
     {
         Id = colonyMineralToUpdate.Id,
         ColonyId = colonyMineralToUpdate.ColonyId,
@@ -585,7 +590,8 @@ app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
 
 
 // Simulate Production
-app.MapPost("/simulateProduction", () => {
+app.MapPost("/simulateProduction", () =>
+{
     var updatedItems = new List<FacilityMineralDTO>();
 
     foreach (var fm in facilityMinerals)
@@ -607,27 +613,27 @@ app.MapPost("/simulateProduction", () => {
     return Results.Ok(updatedItems);
 });
 
-app.MapPut("/colonies/{id}/balance",(int id, decimal Deduction)=>
+app.MapPut("/colonies/{id}/balance", (int id, decimal Deduction) =>
 {
     Colony colony = colonies.FirstOrDefault(c => c.Id == id);
     if (colony == null)
     {
         return Results.NotFound();
     }
-     var updatedBalance = colony.Balance - Deduction;
+    var updatedBalance = colony.Balance - Deduction;
     if (colony.Balance < Deduction)
     {
         return Results.BadRequest("Insufficient Balance");
     }
     return Results.Ok(new ColonyDTO
     {
-       Id = colony.Id,
-       Name = colony.Name,
-       Balance = updatedBalance 
+        Id = colony.Id,
+        Name = colony.Name,
+        Balance = updatedBalance
     });
 });
 
-app.MapPut("/facilities/{id}/balance", (int id, decimal Addition)=>
+app.MapPut("/facilities/{id}/balance", (int id, decimal Addition) =>
 {
     Facility facility = facilities.FirstOrDefault(f => f.Id == id);
     if (facility == null)
