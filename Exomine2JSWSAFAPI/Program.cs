@@ -66,31 +66,36 @@ List<Colony> colonies = new List<Colony>
     {
         Id = 1,
         Name = "Nova Prime",
-        Balance = 141.62M
+        Balance = 141.62M,
+        Population = 2000
     },
     new Colony
     {
         Id = 2,
         Name = "Kepler Outpost",
-        Balance = 99.99M
+        Balance = 99.99M,
+        Population = 1000
     },
     new Colony
     {
         Id = 3,
         Name = "Titan Haven",
-        Balance = 123.23M
+        Balance = 123.23M,
+        Population = 1005
     },
     new Colony
     {
         Id = 4,
         Name = "Andromeda Station",
-        Balance = 209.73M
+        Balance = 209.73M,
+        Population = 1010
     },
     new Colony
     {
         Id = 5,
         Name = "Orion's Reach",
-        Balance = 470.87M
+        Balance = 470.87M,
+        Population = 1111
     }
 };
 List<ColonyMineral> colonyMinerals = new List<ColonyMineral>
@@ -429,7 +434,9 @@ app.MapGet("/colonies", () =>
     var colonyDTOs = colonies.Select(colony => new ColonyDTO
     {
         Id = colony.Id,
-        Name = colony.Name
+        Name = colony.Name,
+        Balance = colony.Balance,
+        Population = colony.Population
     });
 
     return Results.Ok(colonyDTOs);
@@ -535,18 +542,18 @@ app.MapPut("/facilityMinerals/{id}", (int id, int amountPurchased) =>
 });
 
 
-app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
+app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral) =>
 {
-     var existing = colonyMinerals.FirstOrDefault(cm =>
-        cm.ColonyId == colonyMineral.ColonyId &&
-        cm.MineralId == colonyMineral.MineralId);
+    var existing = colonyMinerals.FirstOrDefault(cm =>
+       cm.ColonyId == colonyMineral.ColonyId &&
+       cm.MineralId == colonyMineral.MineralId);
 
     if (existing != null)
     {
-        
+
         return Results.Conflict($"ColonyMineral with ColonyId {colonyMineral.ColonyId} and MineralId {colonyMineral.MineralId} already exists.");
     }
-    colonyMineral.Id = colonyMinerals.Max( cm => cm.Id) + 1;
+    colonyMineral.Id = colonyMinerals.Max(cm => cm.Id) + 1;
     colonyMinerals.Add(colonyMineral);
 
     return Results.Created($"/colonyMinerals/{colonyMineral.Id}", new ColonyMineralDTO
@@ -560,7 +567,7 @@ app.MapPost("/colonyMinerals", (ColonyMineral colonyMineral)=>
     });
 });
 
-app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
+app.MapPut("/colonyMinerals/{id}", (int id, ColonyMineral colonyMineral) =>
 {
     ColonyMineral colonyMineralToUpdate = colonyMinerals.FirstOrDefault(cm => cm.Id == id);
     if (colonyMineralToUpdate == null)
@@ -572,7 +579,7 @@ app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
         return Results.BadRequest();
     }
     colonyMineralToUpdate.Quantity = colonyMineral.Quantity;
-    return Results.Ok( new ColonyMineralDTO
+    return Results.Ok(new ColonyMineralDTO
     {
         Id = colonyMineralToUpdate.Id,
         ColonyId = colonyMineralToUpdate.ColonyId,
@@ -585,7 +592,8 @@ app.MapPut("/colonyMinerals/{id}",(int id, ColonyMineral colonyMineral)=>
 
 
 // Simulate Production
-app.MapPost("/simulateProduction", () => {
+app.MapPost("/simulateProduction", () =>
+{
     var updatedItems = new List<FacilityMineralDTO>();
 
     foreach (var fm in facilityMinerals)
@@ -607,27 +615,27 @@ app.MapPost("/simulateProduction", () => {
     return Results.Ok(updatedItems);
 });
 
-app.MapPut("/colonies/{id}/balance",(int id, decimal Deduction)=>
+app.MapPut("/colonies/{id}/balance", (int id, decimal Deduction) =>
 {
     Colony colony = colonies.FirstOrDefault(c => c.Id == id);
     if (colony == null)
     {
         return Results.NotFound();
     }
-     var updatedBalance = colony.Balance - Deduction;
+    var updatedBalance = colony.Balance - Deduction;
     if (colony.Balance < Deduction)
     {
         return Results.BadRequest("Insufficient Balance");
     }
     return Results.Ok(new ColonyDTO
     {
-       Id = colony.Id,
-       Name = colony.Name,
-       Balance = updatedBalance 
+        Id = colony.Id,
+        Name = colony.Name,
+        Balance = updatedBalance
     });
 });
 
-app.MapPut("/facilities/{id}/balance", (int id, decimal Addition)=>
+app.MapPut("/facilities/{id}/balance", (int id, decimal Addition) =>
 {
     Facility facility = facilities.FirstOrDefault(f => f.Id == id);
     if (facility == null)
@@ -643,5 +651,41 @@ app.MapPut("/facilities/{id}/balance", (int id, decimal Addition)=>
         Balance = updatedBalance
     });
 });
+
+//update colony population
+app.MapPut("/colonies/{id}/population", (int id, int updatedPopulation) =>
+{
+    Colony colony = colonies.FirstOrDefault(c => c.Id == id);
+    if (colony == null) return Results.NotFound();
+
+    colony.Population = updatedPopulation;
+
+    return Results.Ok(new ColonyDTO
+    {
+        Id = colony.Id,
+        Name = colony.Name,
+        Balance = colony.Balance,
+        Population = colony.Population
+    });
+});
+
+//add tax (tax rate comes from front end?)
+app.MapPost("/colonies/{id}/applyTax", (int id, decimal taxPerPerson) =>
+{
+    Colony colony = colonies.FirstOrDefault(c => c.Id == id);
+    if (colony == null) return Results.NotFound();
+
+    decimal totalTax = colony.Population * taxPerPerson;
+    colony.Balance += totalTax;
+
+    return Results.Ok(new ColonyDTO
+    {
+        Id = colony.Id,
+        Name = colony.Name,
+        Balance = colony.Balance,
+        Population = colony.Population
+    });
+});
+
 
 app.Run();
