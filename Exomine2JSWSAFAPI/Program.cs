@@ -659,12 +659,12 @@ app.MapPut("/facilities/{id}/balance", (int id, decimal Addition) =>
 });
 
 //update colony population
-app.MapPut("/colonies/{id}/population", (int id, int updatedPopulation) =>
+app.MapPut("/colonies/population/{id}", (int id, PopulationUpdate updatedPopulation) =>
 {
     Colony colony = colonies.FirstOrDefault(c => c.Id == id);
     if (colony == null) return Results.NotFound();
 
-    colony.Population = updatedPopulation;
+    colony.Population = updatedPopulation.Population;
 
     return Results.Ok(new ColonyDTO
     {
